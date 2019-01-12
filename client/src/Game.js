@@ -31,13 +31,14 @@ class Game extends Component {
   }
   onClick(){
     console.log("clicked");
-    axios.get("http://localhost:5000/hackerEarth",{toCompile:this.state.content})
+    axios.post("http://localhost:5000/hackerearth/compile",{toCompile:this.state.content})
     .then(res=>{
       console.log(res);
     });
   }
 
   render() {
+
     return (
       <React.Fragment>
         <AceEditor
