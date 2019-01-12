@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import { render } from 'react-dom';
 import brace from 'brace';
+import axios from 'axios';
 import AceEditor from 'react-ace';
 
 import 'brace/mode/javascript';
@@ -20,13 +21,19 @@ class Game extends Component {
       content:"",
     }
     this.onChange = this.onChange.bind(this);
+    this.onClick = this.onClick.bind(this);
   }
 
   onChange(newValue,e) {
-    console.log('change',newValue);
-    console.log('event',e);
     this.setState({
       content:newValue,
+    });
+  }
+  onClick(){
+    console.log("clicked");
+    axios.get("http://localhost:5000/hackerEarth",{toCompile:this.state.content})
+    .then(res=>{
+      console.log(res);
     });
   }
 
@@ -41,7 +48,7 @@ class Game extends Component {
           name="UNIQUE_ID_OF_DIV"
           editorProps={{$blockScrolling: true}}
         />
-        <button>submit</button>
+        <button onClick = {this.onClick}>submit</button>
       </React.Fragment>
     );
   }
