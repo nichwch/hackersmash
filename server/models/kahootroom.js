@@ -4,9 +4,9 @@ const RoomShema = new mongoose.Schema({
         type: String,
         default: ''
     },
-    people:{
-        type: Array,
-        default: []
+    shortenedId:{
+        type: String,
+        default: ''
     },
 
 });
