@@ -32,14 +32,17 @@ class Game extends Component {
 
   render() {
     return (
-      <AceEditor
-        mode="javascript"
-        theme="monokai"
-        onChange={this.onChange}
-        value={this.state.content}
-        name="UNIQUE_ID_OF_DIV"
-        editorProps={{$blockScrolling: true}}
-      />
+      <React.Fragment>
+        <AceEditor
+          mode="javascript"
+          theme="monokai"
+          onChange={this.onChange}
+          value={this.state.content}
+          name="UNIQUE_ID_OF_DIV"
+          editorProps={{$blockScrolling: true}}
+        />
+        <button>submit</button>
+      </React.Fragment>
     );
   }
   // constructor(props)
