@@ -18,8 +18,6 @@ class App extends Component {
   render() {
     return (
       <React.Fragment>
-        hello world
-        <input className = "form"></input>
         <Game />
       </React.Fragment>
     );
