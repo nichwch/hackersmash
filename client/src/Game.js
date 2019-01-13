@@ -12,6 +12,31 @@ import HealthBar from "./HealthBar";
 const player = require("./player.png");
 const enemy = require("./enemy.png");
 const path = "http://ec2-54-183-30-60.us-west-1.compute.amazonaws.com:8080";
+const default_content = `var __input_stdin = "";
+var __input_stdin_array = "";
+var __input_currentline = 0;
+
+process.stdin.on('data', function (data) {
+    __input_stdin += data;
+});
+
+function solveMeFirst(a, b) {
+    //type return a+b
+
+}
+process.stdin.on('end', function () {
+    __input_stdin_array = __input_stdin.split("\n");
+    var res;
+    var _a = parseInt(__input_stdin_array[__input_currentline].trim(), 10);
+    __input_currentline += 1;
+
+    var _b = parseInt(__input_stdin_array[__input_currentline].trim(), 10);
+    __input_currentline += 1;
+
+    res = solveMeFirst(_a, _b);
+    process.stdout.write(""+res+"\n");
+
+});`
 // const path = "http://localhost:8080";
 class Game extends Component {
   constructor(props) {
@@ -24,7 +49,7 @@ class Game extends Component {
       playerHealth:0,
       enemyHealth:0,
       loading:false,
-      content:"",
+      content:default_content,
       errorMessage:"",
       problemSummary:""
     }
