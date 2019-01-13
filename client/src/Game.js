@@ -18,30 +18,72 @@ class Game extends Component {
   constructor() {
     super();
     this.state = {
+      loading:false,
       content:"",
+      errorMessage:"",
+      problemSummary:""
     }
     this.onChange = this.onChange.bind(this);
     this.onClick = this.onClick.bind(this);
   }
-
+  componentDidMount(){
+    axios.post("http://localhost:5000/hackerearth/problem",{problemLink:"https://www.hackerrank.com/challenges/ctci-array-left-rotation/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=arrays"})
+    .then(res=>{
+      console.log(res);
+      this.setState({
+        problemSummary:res.data.concat("#view=FitH"),
+      })
+    })
+  }
   onChange(newValue,e) {
     this.setState({
       content:newValue,
     });
   }
   onClick(){
-    console.log("clicked");
+    this.setState({
+      loading:true,
+      errorMessage:""
+    })
     axios.post("http://localhost:5000/hackerearth/compile",{toCompile:this.state.content})
     .then(res=>{
-      console.log(res);
+      console.log(res.data);
+      if(res.data == "error")
+      {
+        this.setState({
+          errorMessage:"Sorry, that answer is not correct.",
+          loading:false,
+        });
+      }
+      else if(res.data == "success")
+      {
+        this.setState({
+          errorMessage:"Nice! That is a correct answer.",
+          loading:false,
+        });
+      }
     });
   }
 
   render() {
+    var button = (<button onClick = {this.onClick}>submit</button>);
+    if(this.state.loading){
+      button = (
+        <React.Fragment>
+          <div className="loadSpinner"></div>
+          Loading...
+        </React.Fragment>
+      )
+    }
 
     return (
       <React.Fragment>
+        <object className = "problemSummary" data={this.state.problemSummary} type="application/pdf">
+          <embed src={this.state.problemSummary} type="application/pdf" />
+        </object>
         <AceEditor
+          fontSize = {14}
+          height = {'300px'}
           mode="javascript"
           theme="monokai"
           onChange={this.onChange}
@@ -49,7 +91,8 @@ class Game extends Component {
           name="UNIQUE_ID_OF_DIV"
           editorProps={{$blockScrolling: true}}
         />
-        <button onClick = {this.onClick}>submit</button>
+        {button}
+        <div className = "errorMessage">{this.state.errorMessage}</div>
       </React.Fragment>
     );
   }

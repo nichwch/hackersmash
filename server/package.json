@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "nodemon server.js"
   },
   "author": "Torin Keenan & Nicholas Chen",
   "license": "ISC",
@@ -16,6 +16,7 @@
     "express": "^4.16.4",
     "jquery": "^3.3.1",
     "mongoose": "^5.4.3",
+    "nodemon": "^1.18.9",
     "puppeteer": "^1.11.0"
   }
 }
