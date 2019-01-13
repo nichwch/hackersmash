@@ -107,6 +107,7 @@ async function headlessScrape(pageToScrape)
   let browser = await puppeteer.launch();
   let page = await browser.newPage();
   await page.goto(pageToScrape);
+  console.log(pageToScrape);
 
   const hrefs = await page.$$eval('#pdf-link', as => as.map(a => a.href));
   console.log(hrefs);
