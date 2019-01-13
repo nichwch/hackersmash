@@ -1,7 +1,7 @@
 var router = require('express').Router();
 const Kahootroom = require('../models/Kahootroom');
-router.get('/', function(req, res) {
-    Kahootroom.findOneAndUpdate({shortenedId:req.query.id.toUpperCase()},{status:'playing'},
+router.post('/', function(req, res) {
+    Kahootroom.findOneAndUpdate({shortenedId:req.body.id.toUpperCase()},{status:'playing',playerTwo:{name:req.body.name,score:0}},
     function(err,result){
         if(err){
             res.json({success: "false"})

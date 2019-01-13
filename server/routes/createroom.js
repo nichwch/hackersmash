@@ -1,6 +1,6 @@
 var router = require('express').Router();
 const Kahootroom = require('../models/Kahootroom');
-router.get('/', function(req, res) {
+router.post('/', function(req, res) {
     console.log("entered");
     var match = true;
     var short = Math.random().toString(36).substring(7).toUpperCase();
@@ -23,6 +23,8 @@ router.get('/', function(req, res) {
     room = new Kahootroom();
     room.shortenedId = short;
     room.status = 'awaiting';
+    room.playerOne.name = req.body.name;
+    room.questions = req.body.questions;
     room.save((err, successs) => {
         if (err) {
             console.log(err);
