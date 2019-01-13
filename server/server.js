@@ -4,7 +4,7 @@ const bodyParser  = require('body-parser');
 const cors        = require('cors');
 const dbconf      = require('./config/dbconfig.js')
 const mongoose    = require('mongoose');
-const port        = 5000;
+const port        = 8080;
 
 mongoose.connect(dbconf.url,function(){
     console.log("connected to DB")
