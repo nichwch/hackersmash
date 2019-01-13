@@ -17,7 +17,20 @@ async function headlessWrite(code,url) {
   await page.click('.auth-button');
   await page.waitFor(1000);
   await page.click('.Select-value');
-  await page.click('#react-select-2--option-10');
+  for(var i = 0;i<22;i++)
+  {
+    await page.click('.Select-value-label');
+    await page.click('#react-select-2--option-'+i).catch(err=>{
+      console.log(err);
+    });
+    var curr = await page.$('.Select-value-label');
+    var textContent = await page.evaluate(() => document.querySelector('.Select-value-label').textContent);
+    if(textContent=="JavaScript (Node.js)")
+    {
+
+      break;
+    }
+  }
   // await page.type('.inputarea',code);
 
 
@@ -27,14 +40,14 @@ async function headlessWrite(code,url) {
   // await page.keyboard.press('V');
 
   await page.type('.inputarea',"1");
-  // await page.keyboard.down('Meta');
   await page.keyboard.down('Control');
+  // await page.keyboard.down('Meta');
   await page.keyboard.press('A');
-  // await page.keyboard.up('Meta');
   await page.keyboard.up('Control');
+  // await page.keyboard.up('Meta');
   await page.keyboard.press('Backspace');
+  code = code.replace(/(\r\n\t|\n|\r\t)/gm, "");
   console.log(code);
-  console.log("^CODE++++++++++++++");
   // attempt 2, currently best attempt
   for (let i = 0;i<code.length;i++)
   {
@@ -70,7 +83,7 @@ async function headlessWrite(code,url) {
   });
   const error = await page.$(".compile-error");
   const success = await page.$(".compile-success");
-  await browser.close();
+  // await browser.close();
   if(success!=null)
   {
     return "success";
@@ -78,7 +91,7 @@ async function headlessWrite(code,url) {
   }
   else if(error != null)
   {
-    return "enderror";
+    return "error";
   }
   return "our bad...";
 

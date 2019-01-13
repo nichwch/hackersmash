@@ -9,23 +9,20 @@ import 'brace/mode/javascript';
 import 'brace/theme/monokai';
 import HealthBar from "./HealthBar";
 
-const LOBBY = "LOBBY";
-const SETUP = "SETUP";
-const GAME = "GAME";
-
 const player = require("./player.png");
 const enemy = require("./enemy.png");
-const path = "http://ec2-54-183-30-60.us-west-1.compute.amazonaws.com:8080";
-// const path = "http://localhost:8080";
+// const path = "http://ec2-54-183-30-60.us-west-1.compute.amazonaws.com:8080";
+const path = "http://localhost:8080";
 class Game extends Component {
   constructor(props) {
     super(props);
     this.state = {
       currentProblem:0,
       problemLoading:true,
-      totalHealth:this.props.problems.length,
-      playerHealth:this.props.problems.length,
-      enemyHealth:this.props.problems.length,
+      questions:[],
+      totalHealth:0,
+      playerHealth:0,
+      enemyHealth:0,
       loading:false,
       content:"",
       errorMessage:"",
@@ -34,11 +31,63 @@ class Game extends Component {
     this.onChange = this.onChange.bind(this);
     this.onClick = this.onClick.bind(this);
     this.getProblem = this.getProblem.bind(this);
-    this.getProblem();
+    this.pingRoom = this.pingRoom.bind(this);
+
+    document.interval = setInterval(this.pingRoom,1000);
+  }
+
+  componentDidMount(){
+    console.log("id"+this.props.id)
+    axios.get(path+"/checkstatus",{params:{id:this.props.id}})
+    .then(res=>{
+        var playerscore = 0;
+        var enemyscore = 0;
+        console.log(res);
+        if(this.props.p1)
+        {
+          playerscore = res.data.playerOne.score;
+          enemyscore = res.data.playerTwo.score;
+        }
+        else{
+          playerscore = res.data.playerTwo.score;
+          enemyscore = res.data.playerOne.score;
+        }
+        this.setState({
+          totalHealth:res.data.questions.length,
+          questions:res.data.questions,
+          playerHealth:res.data.questions - enemyscore,
+          enemyHealth:res.data.questions - playerscore
+        });
+        this.getProblem();
+        console.log(res);
+    });
+  }
+  pingRoom(){
+    console.log("lol");
+    axios.get(path+"/checkstatus",{params:{id:this.props.id}})
+    .then(res=>{
+        var playerscore = 0;
+        var enemyscore = 0;
+        if(this.props.p1)
+        {
+          playerscore = res.data.playerOne.score;
+          enemyscore = res.data.playerTwo.score;
+        }
+        else{
+          playerscore = res.data.playerTwo.score;
+          enemyscore = res.data.playerOne.score;
+        }
+        this.setState({
+          totalHealth:res.data.questions.length,
+          questions:res.data.questions,
+          playerHealth:this.state.totalHealth - enemyscore,
+          enemyHealth:this.state.totalHealth - playerscore
+        });
+    })
   }
 
   getProblem(){
-    axios.post(path+"/hackerearth/problem",{problemLink:this.props.problems[this.state.currentProblem]})
+    axios.post(path+"/hackerearth/problem",{problemLink:this.state.questions[this.state.currentProblem]})
     .then(res=>{
       console.log(res);
       this.setState({
@@ -57,7 +106,7 @@ class Game extends Component {
       loading:true,
       errorMessage:""
     })
-    axios.post(path+"/hackerearth/compile",{toCompile:this.state.content,problemLink:this.props.problems[this.state.currentProblem]})
+    axios.post(path+"/hackerearth/compile",{toCompile:this.state.content,problemLink:this.state.questions[this.state.currentProblem]})
     .then(res=>{
       console.log(res.data);
       if(res.data == "error")
@@ -69,7 +118,12 @@ class Game extends Component {
       }
       else if(res.data == "success")
       {
-
+        var playerr = "playerTwo"
+        if(this.props.p1)
+        {
+          playerr = "playerOne"
+        }
+        axios.post(path+"/incrementscore",{id:this.props.id,player:playerr,amount:1});
         this.setState({
           errorMessage:"Nice! That is a correct answer.",
           loading:false,
@@ -78,7 +132,7 @@ class Game extends Component {
           currentProblem:this.state.currentProblem+1
         },
         ()=>{
-            if(this.state.currentProblem < this.props.problems.length)
+            if(this.state.currentProblem < this.state.questions.length)
             {
               this.getProblem();
             }
