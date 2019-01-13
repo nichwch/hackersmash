@@ -27,9 +27,11 @@ async function headlessWrite(code,url) {
   // await page.keyboard.press('V');
 
   await page.type('.inputarea',"1");
-  await page.keyboard.down('Meta');
+  // await page.keyboard.down('Meta');
+  await page.keyboard.down('Control');
   await page.keyboard.press('A');
-  await page.keyboard.up('Meta');
+  // await page.keyboard.up('Meta');
+  await page.keyboard.up('Control');
   await page.keyboard.press('Backspace');
   console.log(code);
   console.log("^CODE++++++++++++++");
