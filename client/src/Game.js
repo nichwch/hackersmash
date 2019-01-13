@@ -11,8 +11,12 @@ import HealthBar from "./HealthBar";
 
 const player = require("./player.png");
 const enemy = require("./enemy.png");
-const path = "http://ec2-54-183-30-60.us-west-1.compute.amazonaws.com:8080";
+const path = "http://ec2-54-67-99-232.us-west-1.compute.amazonaws.com:8080";
 // const path = "http://localhost:8080";
+const default_content = "";
+// const default_content =
+// `process.stdin.resume();\nprocess.stdin.setEncoding('ascii');\nvar __input_stdin = "";\nvar __input_stdin_array = "";\nvar __input_currentline = 0;\nprocess.stdin.on('data', function (data) {\n__input_stdin += data;\n});\nfunction solveMeFirst(a, b) {\nreturn a+b;\n}\nprocess.stdin.on('end', function () {\n__input_stdin_array = __input_stdin.split("\n");\nvar res;\nvar _a = parseInt(__input_stdin_array[__input_currentline].trim(), 10);\n__input_currentline += 1;\nvar _b = parseInt(__input_stdin_array[__input_currentline].trim(), 10);\n__input_currentline += 1;\nres = solveMeFirst(_a, _b);\nprocess.stdout.write(""+res+"");});`
+// // const path = "http://localhost:8080";
 class Game extends Component {
   constructor(props) {
     super(props);
@@ -24,7 +28,7 @@ class Game extends Component {
       playerHealth:0,
       enemyHealth:0,
       loading:false,
-      content:"",
+      content:default_content,
       errorMessage:"",
       problemSummary:""
     }
