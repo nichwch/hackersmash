@@ -11,8 +11,8 @@ import HealthBar from "./HealthBar";
 
 const player = require("./player.png");
 const enemy = require("./enemy.png");
-// const path = "http://ec2-54-183-30-60.us-west-1.compute.amazonaws.com:8080";
-const path = "http://localhost:8080";
+const path = "http://ec2-54-183-30-60.us-west-1.compute.amazonaws.com:8080";
+// const path = "http://localhost:8080";
 class Game extends Component {
   constructor(props) {
     super(props);
