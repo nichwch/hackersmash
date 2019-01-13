@@ -84,28 +84,13 @@ async function headlessWrite(code) {
 
 async function headlessScrape(pageToScrape)
 {
-  let browser = await puppeteer.launch({headless:false});
+  let browser = await puppeteer.launch();
   let page = await browser.newPage();
   await page.goto(pageToScrape);
-  // await page.click('.close-icon');
 
   const hrefs = await page.$$eval('#pdf-link', as => as.map(a => a.href));
   console.log(hrefs);
-  await page.goto(hrefs[0]).catch(err=>{console.log(err)});
-  // await page.waitForNavigation({waitUntil:"networkidle2"});
-  return(page.url());
-
-  // const newPagePromise = new Promise(x => browser.once('targetcreated', target => x(target.page())));
-  // await page.click('#pdf-link');
-  // const newPage = await newPagePromise;
-  // console.log(page.url());
-  // const pdfUrl = newPage.url();
-  // return pdfUrl;
-  // await page.click('#pdf-link');
-  // // await page.waitForNavigation({ waitUntil: 'networkidle2' });
-  // await page.waitFor(5000);
-  // console.log("lol");
-  // console.log(page.url());
+  return(hrefs[0]);
 
 
 }

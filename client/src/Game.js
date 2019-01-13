@@ -67,6 +67,10 @@ class Game extends Component {
 
   render() {
     var button = (<button onClick = {this.onClick}>submit</button>);
+    var problemStatement = (
+      <object className = "problemSummary" data={this.state.problemSummary} type="application/pdf">
+        <embed src={this.state.problemSummary} type="application/pdf" />
+      </object>)
     if(this.state.loading){
       button = (
         <React.Fragment>
@@ -78,9 +82,7 @@ class Game extends Component {
 
     return (
       <React.Fragment>
-        <object className = "problemSummary" data={this.state.problemSummary} type="application/pdf">
-          <embed src={this.state.problemSummary} type="application/pdf" />
-        </object>
+        {problemStatement}
         <AceEditor
           fontSize = {14}
           height = {'300px'}
