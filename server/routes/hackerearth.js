@@ -132,6 +132,7 @@ router.post('/compile', function(req, res) {
 
 router.post('/problem', function(req, res) {
   var source = req.body.problemLink;
+  console.log("p1"+source);
   headlessScrape(source).then(resp =>{
     console.log(resp);
     res.send(resp);
