@@ -104,10 +104,13 @@ async function headlessWrite(code,url) {
 
 async function headlessScrape(pageToScrape)
 {
+    console.log("pagetoscrap"+pageToScrape);
   let browser = await puppeteer.launch();
+  console.log("1");
   let page = await browser.newPage();
+   console.log("2");
   await page.goto(pageToScrape);
-  console.log("pagetoscrap"+pageToScrape);
+
 
   const hrefs = await page.$$eval('#pdf-link', as => as.map(a => a.href));
   console.log(hrefs);
@@ -132,7 +135,6 @@ router.post('/compile', function(req, res) {
 
 router.post('/problem', function(req, res) {
   var source = req.body.problemLink;
-  console.log("p1"+source);
   headlessScrape(source).then(resp =>{
     console.log(resp);
     res.send(resp);
