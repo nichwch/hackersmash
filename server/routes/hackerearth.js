@@ -31,7 +31,7 @@ async function headlessWrite(code,url) {
   await page.keyboard.press('A');
   await page.keyboard.up('Meta');
   await page.keyboard.press('Backspace');
-
+  console.log(code);
   // attempt 2, currently best attempt
   for (let i = 0;i<code.length;i++)
   {
