@@ -67,7 +67,6 @@ class Game extends Component {
     });
   }
   pingRoom(){
-    console.log("lol");
     axios.get(path+"/checkstatus",{params:{id:this.props.id}})
     .then(res=>{
         var playerscore = 0;
@@ -91,6 +90,8 @@ class Game extends Component {
   }
 
   getProblem(){
+    console.log("LOL");
+    console.log(this.state.questions[this.state.currentProblem]);
     axios.post(path+"/hackerearth/problem",{problemLink:this.state.questions[this.state.currentProblem]})
     .then(res=>{
       console.log(res);
