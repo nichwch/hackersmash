@@ -32,10 +32,12 @@ async function headlessWrite(code,url) {
   await page.keyboard.up('Meta');
   await page.keyboard.press('Backspace');
   console.log(code);
+  console.log("^CODE++++++++++++++");
   // attempt 2, currently best attempt
   for (let i = 0;i<code.length;i++)
   {
     // await page.waitFor(10);
+    process.stdout.write(i);
     if(code[i]=="{")
     {
       await page.type('.inputarea',code[i]);
@@ -76,7 +78,7 @@ async function headlessWrite(code,url) {
   }
   else if(error != null)
   {
-    return "error";
+    return "enderror";
   }
   return "our bad...";
 
