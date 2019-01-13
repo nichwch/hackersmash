@@ -16,7 +16,7 @@ const GAME = "GAME";
 const player = require("./player.png");
 const enemy = require("./enemy.png");
 // const path = "http://ec2-54-183-30-60.us-west-1.compute.amazonaws.com:8080";
-const path = "http://localhost:5000";
+const path = "http://localhost:8080";
 // function onChange(newValue) {
 //   console.log('change',newValue);
 // }

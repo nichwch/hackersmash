@@ -6,7 +6,8 @@ const password = "SamplePassword123";
 
 async function headlessWrite(code,url) {
   // {headless: false}
-  let browser = await puppeteer.launch({headless:false});
+  // console.log("hello");
+  let browser = await puppeteer.launch();
   let page = await browser.newPage();
   await page.goto(url);
 
@@ -63,6 +64,7 @@ async function headlessWrite(code,url) {
   .then(async ()=>{
     const error = await page.$(".compile-error");
     const success = await page.$(".compile-success");
+    await browser.close();
     if(error != null)
     {
       console.log("error");
@@ -81,6 +83,7 @@ async function headlessWrite(code,url) {
     console.log(err);
     const error = await page.$(".compile-error");
     const success = await page.$(".compile-success");
+    await browser.close();
     if(error != null)
     {
       console.log("error");
@@ -101,7 +104,7 @@ async function headlessWrite(code,url) {
 
 
 
-  // await browser.close();
+
 }
 
 async function headlessScrape(pageToScrape)
@@ -112,7 +115,10 @@ async function headlessScrape(pageToScrape)
 
   const hrefs = await page.$$eval('#pdf-link', as => as.map(a => a.href));
   console.log(hrefs);
+  await browser.close();
   return(hrefs[0]);
+
+
 
 }
 
