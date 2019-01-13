@@ -7,7 +7,7 @@ const password = "SamplePassword123";
 async function headlessWrite(code,url) {
   // {headless: false}
   // console.log("hello");
-  let browser = await puppeteer.launch({headless:false});
+  let browser = await puppeteer.launch();
   let page = await browser.newPage();
   await page.goto(url);
 
