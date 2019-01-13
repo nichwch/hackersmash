@@ -60,45 +60,23 @@ async function headlessWrite(code,url) {
   };
   await page.click('.hr-monaco-compile');
   // await page.waitFor(2000);
-  page.waitForSelector("p.status",{ timeout: 5000, visible: false})
-  .then(async ()=>{
-    const error = await page.$(".compile-error");
-    const success = await page.$(".compile-success");
-    await browser.close();
-    if(error != null)
-    {
-      console.log("error");
-      return "error";
-    }
-    else if(success!=null)
-    {
-      console.log("success");
-      return "success";
-    }
-    else {
-      console.log("something went wrong");
-      return "our bad..."
-    };
-  }).catch(async (err)=>{
-    console.log(err);
-    const error = await page.$(".compile-error");
-    const success = await page.$(".compile-success");
-    await browser.close();
-    if(error != null)
-    {
-      console.log("error");
-      return "error";
-    }
-    else if(success!=null)
-    {
-      console.log("success");
-      return "success";
-    }
-    else {
-      console.log("something went wrong");
-      return "our bad..."
-    };
-  })
+  await page.waitForSelector("p.status",{ timeout: 5000, visible: false})
+  .catch(async (err)=>{
+    console.log("something went wrong");
+    return "our bad..."
+  });
+  const error = await page.$(".compile-error");
+  const success = await page.$(".compile-success");
+  await browser.close();
+  if(error != null)
+  {
+    return "error";
+  }
+  else if(success!=null)
+  {
+    return "success";
+  }
+  return "our bad...";
 
 
 
@@ -128,6 +106,7 @@ router.post('/compile', function(req, res) {
   var urrl = req.body.problemLink;
   console.log(urrl);
   headlessWrite(source,urrl).then(resp =>{
+    console.log("resp"+resp);
     res.send(resp);
   });
 
