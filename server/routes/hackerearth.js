@@ -110,6 +110,7 @@ async function headlessScrape(pageToScrape)
   let page = await browser.newPage();
    console.log("2");
   await page.goto(pageToScrape);
+  console.log("3");
 
 
   const hrefs = await page.$$eval('#pdf-link', as => as.map(a => a.href));
