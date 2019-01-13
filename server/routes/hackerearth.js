@@ -38,9 +38,6 @@ async function headlessWrite(code,url) {
   // attempt 2, currently best attempt
   for (let i = 0;i<code.length;i++)
   {
-    // await page.waitFor(10);
-    process.stdout.write(i);
-    console.log(code[i]);
     if(code[i]=="{")
     {
       await page.type('.inputarea',code[i]);
