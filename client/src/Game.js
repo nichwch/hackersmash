@@ -7,17 +7,28 @@ import AceEditor from 'react-ace';
 
 import 'brace/mode/javascript';
 import 'brace/theme/monokai';
+import HealthBar from "./HealthBar";
 
 const LOBBY = "LOBBY";
 const SETUP = "SETUP";
 const GAME = "GAME";
+
+const player = require("./player.png");
+const enemy = require("./enemy.png");
+// const path = "http://ec2-54-183-30-60.us-west-1.compute.amazonaws.com:8080";
+const path = "http://localhost:5000";
 // function onChange(newValue) {
 //   console.log('change',newValue);
 // }
 class Game extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
+      currentProblem:0,
+      problemLoading:true,
+      totalHealth:this.props.problems.length,
+      playerHealth:this.props.problems.length,
+      enemyHealth:this.props.problems.length,
       loading:false,
       content:"",
       errorMessage:"",
@@ -25,15 +36,19 @@ class Game extends Component {
     }
     this.onChange = this.onChange.bind(this);
     this.onClick = this.onClick.bind(this);
+    this.getProblem = this.getProblem.bind(this);
+    this.getProblem();
   }
-  componentDidMount(){
-    axios.post("http://localhost:5000/hackerearth/problem",{problemLink:"https://www.hackerrank.com/challenges/ctci-array-left-rotation/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=arrays"})
+
+  getProblem(){
+    axios.post(path+"/hackerearth/problem",{problemLink:this.props.problems[this.state.currentProblem]})
     .then(res=>{
       console.log(res);
       this.setState({
         problemSummary:res.data.concat("#view=FitH"),
+        problemLoading:false,
       })
-    })
+    });
   }
   onChange(newValue,e) {
     this.setState({
@@ -45,7 +60,7 @@ class Game extends Component {
       loading:true,
       errorMessage:""
     })
-    axios.post("http://localhost:5000/hackerearth/compile",{toCompile:this.state.content})
+    axios.post(path+"/hackerearth/compile",{toCompile:this.state.content,problemLink:this.props.problems[this.state.currentProblem]})
     .then(res=>{
       console.log(res.data);
       if(res.data == "error")
@@ -57,8 +72,27 @@ class Game extends Component {
       }
       else if(res.data == "success")
       {
+
         this.setState({
           errorMessage:"Nice! That is a correct answer.",
+          loading:false,
+          problemLoading:true,
+          enemyHealth:this.state.enemyHealth-1,
+          currentProblem:this.state.currentProblem+1
+        },
+        ()=>{
+            if(this.state.currentProblem < this.props.problems.length)
+            {
+              this.getProblem();
+            }
+          }
+      );
+
+      }
+      else
+      {
+        this.setState({
+          errorMessage:"Network error. Try submitting again.",
           loading:false,
         });
       }
@@ -66,26 +100,42 @@ class Game extends Component {
   }
 
   render() {
-    var button = (<button onClick = {this.onClick}>submit</button>);
+    var button = (<button className = "submit" onClick = {this.onClick}>submit</button>);
     var problemStatement = (
       <object className = "problemSummary" data={this.state.problemSummary} type="application/pdf">
         <embed src={this.state.problemSummary} type="application/pdf" />
-      </object>)
+      </object>
+
+    )
     if(this.state.loading){
       button = (
-        <React.Fragment>
+        <div className="loadWrapper">
           <div className="loadSpinner"></div>
           Loading...
-        </React.Fragment>
+        </div>
+      );
+
+    }
+    if(this.state.problemLoading){
+      problemStatement = (
+
+        <div className="bigLoadWrapper">
+          <div className="bigLoadSpinner"></div>
+          <div> >Loading...</div>
+          <div> >initilizing combat systems... </div>
+          <div> >charging weapons... </div>
+        </div>
+
       )
     }
 
     return (
       <React.Fragment>
+      <div className = "codeContainer">
         {problemStatement}
         <AceEditor
           fontSize = {14}
-          height = {'300px'}
+          height = {'270px'}
           mode="javascript"
           theme="monokai"
           onChange={this.onChange}
@@ -95,42 +145,25 @@ class Game extends Component {
         />
         {button}
         <div className = "errorMessage">{this.state.errorMessage}</div>
+      </div>
+        <div className = "gameContainer">
+          <div className = "enemyHealth">
+            Enemy HP: <HealthBar health={this.state.enemyHealth} max={this.state.totalHealth}/>
+          </div>
+          <div className = "combat">
+            <img className = "playerPortrait" src = {player}></img>
+            <img className = "enemyPortrait" src = {enemy}></img>
+          </div>
+          <div className = "playerHealth">
+            Player Health: <HealthBar health={this.state.playerHealth} max={this.state.totalHealth}/>
+          </div>
+
+      </div>
+
       </React.Fragment>
     );
   }
-  // constructor(props)
-  // {
-  //   super(props);
-  // }
-  // render() {
-  //   return (
-  //     <React.Fragment>
-  //     <AceEditor
-  //       mode="javascript"
-  //       theme="monokai"
-  //       name="blah2"
-  //       onLoad={this.onLoad}
-  //       onChange={this.onChange}
-  //       fontSize={14}
-  //       showPrintMargin={true}
-  //       showGutter={true}
-  //       highlightActiveLine={true}
-  //       value={`function onLoad(editor) {
-  //       console.log("i've loaded");
-  //     }
-  //
-  //
-  //     `}
-  //       setOptions={{
-  //       enableBasicAutocompletion: false,
-  //       enableLiveAutocompletion: false,
-  //       enableSnippets: false,
-  //       showLineNumbers: true,
-  //       tabSize: 2,
-  //       }}/>
-  //     </React.Fragment>
-  //   );
-  // }
+
 }
 
 export default Game;

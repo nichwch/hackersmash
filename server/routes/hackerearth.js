@@ -4,11 +4,11 @@ const puppeteer = require('puppeteer');
 const username = "nichwch@gmail.com";
 const password = "SamplePassword123";
 
-async function headlessWrite(code) {
+async function headlessWrite(code,url) {
   // {headless: false}
-  let browser = await puppeteer.launch();
+  let browser = await puppeteer.launch({headless:false});
   let page = await browser.newPage();
-  await page.goto('https://www.hackerrank.com/challenges/ctci-array-left-rotation/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=arrays');
+  await page.goto(url);
 
   await page.click('#auth-login');
   await page.type('#input-4', username);
@@ -58,23 +58,45 @@ async function headlessWrite(code) {
 
   };
   await page.click('.hr-monaco-compile');
-  await page.waitFor(2000);
-  const error = await page.$(".compile-error");
-  const success = await page.$(".compile-success");
-  if(error != null)
-  {
-    console.log("error");
-    return "error";
-  }
-  else if(success!=null)
-  {
-    console.log("success");
-    return "success";
-  }
-  else {
-    console.log("something went wrong");
-    return "our bad..."
-  }
+  // await page.waitFor(2000);
+  page.waitForSelector("p.status",{ timeout: 5000, visible: false})
+  .then(async ()=>{
+    const error = await page.$(".compile-error");
+    const success = await page.$(".compile-success");
+    if(error != null)
+    {
+      console.log("error");
+      return "error";
+    }
+    else if(success!=null)
+    {
+      console.log("success");
+      return "success";
+    }
+    else {
+      console.log("something went wrong");
+      return "our bad..."
+    };
+  }).catch(async (err)=>{
+    console.log(err);
+    const error = await page.$(".compile-error");
+    const success = await page.$(".compile-success");
+    if(error != null)
+    {
+      console.log("error");
+      return "error";
+    }
+    else if(success!=null)
+    {
+      console.log("success");
+      return "success";
+    }
+    else {
+      console.log("something went wrong");
+      return "our bad..."
+    };
+  })
+
 
 
 
@@ -92,13 +114,14 @@ async function headlessScrape(pageToScrape)
   console.log(hrefs);
   return(hrefs[0]);
 
-
 }
 
 var router = require('express').Router();
 router.post('/compile', function(req, res) {
   var source = req.body.toCompile;
-  headlessWrite(source).then(resp =>{
+  var urrl = req.body.problemLink;
+  console.log(urrl);
+  headlessWrite(source,urrl).then(resp =>{
     res.send(resp);
   });
 
