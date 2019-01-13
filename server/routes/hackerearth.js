@@ -35,6 +35,7 @@ async function headlessWrite(code,url) {
   // attempt 2, currently best attempt
   for (let i = 0;i<code.length;i++)
   {
+    await page.waitFor(10);
     if(code[i]=="{")
     {
       await page.type('.inputarea',code[i]);
@@ -68,13 +69,14 @@ async function headlessWrite(code,url) {
   const error = await page.$(".compile-error");
   const success = await page.$(".compile-success");
   await browser.close();
-  if(error != null)
-  {
-    return "error";
-  }
-  else if(success!=null)
+  if(success!=null)
   {
     return "success";
+
+  }
+  else if(error != null)
+  {
+    return "error";
   }
   return "our bad...";
 
