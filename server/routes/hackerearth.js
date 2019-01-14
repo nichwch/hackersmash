@@ -7,7 +7,7 @@ const password = "SamplePassword123";
 async function headlessWrite(code,url) {
   // {headless: false}
   // console.log("hello");
-  let browser = await puppeteer.launch();
+  let browser = await puppeteer.launch({headless:false});
   let page = await browser.newPage();
   await page.goto(url);
 
@@ -40,11 +40,11 @@ async function headlessWrite(code,url) {
   // await page.keyboard.press('V');
 
   await page.type('.inputarea',"1");
-  await page.keyboard.down('Control');
-  // await page.keyboard.down('Meta');
+  // await page.keyboard.down('Control');
+  await page.keyboard.down('Meta');
   await page.keyboard.press('A');
-  await page.keyboard.up('Control');
-  // await page.keyboard.up('Meta');
+  // await page.keyboard.up('Control');
+  await page.keyboard.up('Meta');
   await page.keyboard.press('Backspace');
   code = code.replace(/(\r\n\t|\n|\r\t)/gm, "");
   console.log(code);

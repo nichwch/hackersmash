@@ -9,8 +9,8 @@ const SETUP = "SETUP";
 
 var timer = null;
 
-const path = "http://ec2-54-67-99-232.us-west-1.compute.amazonaws.com:8080";
-// const path = "http://localhost:8080";
+// const path = "http://ec2-54-67-99-232.us-west-1.compute.amazonaws.com:8080";
+const path = "http://localhost:8080";
 
 class Lobby extends Component {
   constructor(props)
