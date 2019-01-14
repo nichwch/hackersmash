@@ -104,9 +104,14 @@ async function headlessWrite(code,url) {
 
 async function headlessScrape(pageToScrape)
 {
+    console.log("pagetoscrap"+pageToScrape);
   let browser = await puppeteer.launch();
+  console.log("1");
   let page = await browser.newPage();
+   console.log("2");
   await page.goto(pageToScrape);
+  console.log("3");
+
 
   const hrefs = await page.$$eval('#pdf-link', as => as.map(a => a.href));
   console.log(hrefs);
